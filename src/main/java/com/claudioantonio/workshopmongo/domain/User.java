@@ -1,9 +1,12 @@
 package com.claudioantonio.workshopmongo.domain;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Document(collection = "user")
@@ -13,6 +16,12 @@ public class User implements Serializable {
     private String id;
     private String name;
     private String email;
+
+    /* Referência aos posts do usuario.
+     * @DBRef instrui o SpringData a armazenar nessa lista apenas as referências(ids) dos posts e não o corpo inteiro.
+     * lazy = true: especifica que o documento não sera carregado imediatamente quando User for consultado, a não ser que ocorra uma busca especifica para ele.*/
+    @DBRef(lazy = true)
+    private List<Post> posts = new ArrayList<>();
 
     public User() {}
 
@@ -44,6 +53,10 @@ public class User implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
     }
 
     @Override
